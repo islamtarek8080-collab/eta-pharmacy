@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ETA Pharmacy</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f7f5;--card:#fff;--ink:#12332e;--mute:#5d7770;--line:#d5e3de;--pri:#0f766e;--priInk:#fff;--warn:#b45309;--warnBg:#fdf1de;--bad:#b3261e;--badBg:#fce8e6;--ok:#15803d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1c19;--card:#16282480;--ink:#e6f2ee;--mute:#93b0a8;--line:#27403a;--pri:#2dd4bf;--priInk:#06201c;--warn:#f5b350;--warnBg:#3a2a10;--bad:#ff8a80;--badBg:#3d1816;--ok:#6ee7a0}}
+:root[data-theme="dark"]{--bg:#0e1c19;--card:#162824;--ink:#e6f2ee;--mute:#93b0a8;--line:#27403a;--pri:#2dd4bf;--priInk:#06201c;--warn:#f5b350;--warnBg:#3a2a10;--bad:#ff8a80;--badBg:#3d1816;--ok:#6ee7a0}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Tajawal,Tahoma,Arial,sans-serif;line-height:1.6}
+header{padding:18px 16px 8px;max-width:760px;margin:auto}
+header input.name{font:700 22px Tajawal,Tahoma,sans-serif;background:none;border:0;color:var(--ink);width:100%;padding:0}
+header p{margin:0;color:var(--mute);font-size:14px}
+header input.doc{font:500 16px Tajawal,Tahoma,sans-serif;background:none;border:0;color:var(--pri);width:100%;padding:0 0 4px}
+nav{display:flex;gap:6px;max-width:760px;margin:8px auto;padding:0 16px}
+nav button{flex:1;padding:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;font:500 15px Tajawal,Tahoma,sans-serif;cursor:pointer}
+nav button.on{background:var(--pri);color:var(--priInk);border-color:var(--pri);font-weight:700}
+main{max-width:760px;margin:auto;padding:8px 16px 40px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+input,button{font-family:inherit}
+input[type=text],input[type=number],input[type=date],input[type=search]{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:15px}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.grid label{font-size:13px;color:var(--mute)}
+.btn{padding:10px 16px;border:0;border-radius:8px;background:var(--pri);color:var(--priInk);font-weight:700;font-size:15px;cursor:pointer}
+.btn.ghost{background:none;color:var(--bad);border:1px solid var(--line);padding:6px 10px;font-size:13px}
+.btn.sm{padding:6px 12px;font-size:13px}
+.row{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block}
+.row .t small{color:var(--mute)}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;margin-inline-start:6px}
+.tag.w{background:var(--warnBg);color:var(--warn)}
+.tag.b{background:var(--badBg);color:var(--bad)}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:16px;cursor:pointer}
+.total{display:flex;justify-content:space-between;font-size:20px;font-weight:700;padding:10px 0}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat span{color:var(--mute);font-size:13px}
+.stat b{display:block;font-size:24px}
+h2{font-size:16px;margin:0 0 8px}
+.empty{color:var(--mute);text-align:center;padding:18px 0}
+.hide{display:none}
+</style>
+</head>
+<body>
+<header>
+  <input class="name" id="shopName" value="ETA Pharmacy" dir="auto" aria-label="اسم الصيدلية">
+  <input class="doc" id="docName" value="Dr. Eslam Tarek Eldabea" dir="auto" aria-label="اسم الدكتور">
+  <p>مبيعات ومخزون وتنبيهات الصلاحية</p>
+</header>
+<nav id="tabs">
+  <button data-t="sell" class="on">البيع</button>
+  <button data-t="stock">المخزون</button>
+  <button data-t="sum">الملخص</button>
+</nav>
+<main>
+  <section id="sell">
+    <div class="box">
+      <input type="search" id="q" placeholder="ابحث عن دواء للبيع">
+      <div id="results"></div>
+    </div>
+    <div class="box">
+      <h2>الفاتورة الحالية</h2>
+      <div id="cart"></div>
+      <div class="total"><span>الإجمالي</span><span id="cartTotal">0</span></div>
+      <button class="btn" id="checkout" style="width:100%">تأكيد البيع</button>
+    </div>
+  </section>
+
+  <section id="stock" class="hide">
+    <div class="box">
+      <h2>إضافة دواء</h2>
+      <div class="grid">
+        <div><label for="fn">الاسم</label><input type="text" id="fn"></div>
+        <div><label for="fp">السعر (ج.م)</label><input type="number" id="fp" min="0" step="0.5"></div>
+        <div><label for="fq">الكمية</label><input type="number" id="fq" min="0"></div>
+        <div><label for="fe">تاريخ الصلاحية</label><input type="date" id="fe"></div>
+      </div>
+      <button class="btn" id="add" style="margin-top:10px">حفظ الدواء</button>
+      <button class="btn ghost" id="bulk" style="margin-top:10px;margin-inline-start:8px;color:var(--pri)">إضافة 40 دواء شائع</button>
+    </div>
+    <div class="box">
+      <input type="search" id="sq" placeholder="ابحث في المخزون">
+      <div id="inv"></div>
+    </div>
+  </section>
+
+  <section id="sum" class="hide">
+    <div class="stats" id="stats"></div>
+    <div class="box" style="margin-top:12px"><h2>يحتاج انتباه</h2><div id="alerts"></div></div>
+    <div class="box"><h2>آخر المبيعات</h2><div id="log"></div></div>
+  </section>
+</main>
+<script>
+(function(){
+var K='pharmacy-app-v1';
+var S={meds:[],sales:[],name:'ETA Pharmacy'};
+try{var r=localStorage.getItem(K);if(r){var p=JSON.parse(r);if(p&&p.meds)S=p}}catch(e){}
+if(!S.name||S.name==='صيدليتي')S.name='ETA Pharmacy';
+if(!S.doc)S.doc='Dr. Eslam Tarek Eldabea';
+if(!S.meds.length&&!S.sales.length){
+  var d=function(n){var x=new Date();x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+  S.meds=[{id:1,n:'باراسيتامول 500 مجم',p:25,q:40,e:d(400)},{id:2,n:'أموكسيسيلين 1 جم',p:68,q:4,e:d(60)},{id:3,n:'فيتامين د 50000',p:90,q:12,e:d(250)}];
+}
+function save(){S.name=$('shopName').value;S.doc=$('docName').value;try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function days(e){return e?Math.floor((new Date(e)-new Date())/864e5):9999}
+function tags(m){var t='',dd=days(m.e);
+  if(dd<0)t+='<span class="tag b">منتهي الصلاحية</span>';else if(dd<=90)t+='<span class="tag w">ينتهي خلال '+dd+' يوم</span>';
+  if(m.q<=0)t+='<span class="tag b">نفد</span>';else if(m.q<=5)t+='<span class="tag w">كمية قليلة</span>';return t}
+var cart={};
+function sellable(m){return m.q>0&&days(m.e)>=0}
+function renderSell(){
+  var q=$('q').value.trim(),list=S.meds.filter(function(m){return !q||m.n.indexOf(q)>-1}).slice(0,8);
+  $('results').innerHTML=list.length?list.map(function(m){
+    return '<div class="row"><div class="t"><b>'+esc(m.n)+tags(m)+'</b><small>'+m.p+' ج.م — متاح '+m.q+'</small></div>'+
+    (sellable(m)?'<button class="btn sm" data-add="'+m.id+'">إضافة</button>':'')+'</div>'}).join(''):'<div class="empty">لا توجد نتائج</div>';
+  var ids=Object.keys(cart),tot=0;
+  $('cart').innerHTML=ids.length?ids.map(function(id){var m=S.meds.filter(function(x){return x.id==id})[0];tot+=m.p*cart[id];
+    return '<div class="row"><div class="t"><b>'+esc(m.n)+'</b><small>'+(m.p*cart[id])+' ج.م</small></div><div class="qty"><button data-dec="'+id+'" aria-label="إنقاص">−</button><span>'+cart[id]+'</span><button data-inc="'+id+'" aria-label="زيادة">+</button></div></div>'}).join(''):'<div class="empty">أضف أدوية من نتائج البحث لبدء فاتورة</div>';
+  $('cartTotal').textContent=tot+' ج.م';
+}
+function renderInv(){
+  var q=$('sq').value.trim(),list=S.meds.filter(function(m){return !q||m.n.indexOf(q)>-1});
+  $('inv').innerHTML=list.length?list.map(function(m){
+    return '<div class="row"><div class="t"><b>'+esc(m.n)+tags(m)+'</b><small>'+m.p+' ج.م — الكمية '+m.q+(m.e?' — صلاحية '+m.e:'')+'</small></div>'+
+    '<button class="btn sm" data-price="'+m.id+'">سعر</button><button class="btn sm" data-restock="'+m.id+'">توريد</button><button class="btn ghost" data-del="'+m.id+'">حذف</button></div>'}).join(''):'<div class="empty">المخزون فارغ. أضف أول دواء من النموذج أعلاه</div>';
+}
+function today(){return new Date().toISOString().slice(0,10)}
+function renderSum(){
+  var ts=S.sales.filter(function(s){return s.d===today()}).reduce(function(a,s){return a+s.t},0);
+  var low=S.meds.filter(function(m){return m.q<=5}).length,exp=S.meds.filter(function(m){return days(m.e)<=90}).length;
+  $('stats').innerHTML=[['مبيعات اليوم',ts+' ج.م'],['عدد الأصناف',S.meds.length],['كمية قليلة',low],['قريب الانتهاء',exp]].map(function(a){return '<div class="stat"><span>'+a[0]+'</span><b>'+a[1]+'</b></div>'}).join('');
+  var al=S.meds.filter(function(m){return m.q<=5||days(m.e)<=90});
+  $('alerts').innerHTML=al.length?al.map(function(m){return '<div class="row"><div class="t"><b>'+esc(m.n)+tags(m)+'</b></div></div>'}).join(''):'<div class="empty">لا توجد تنبيهات</div>';
+  $('log').innerHTML=S.sales.length?S.sales.slice(-8).reverse().map(function(s){return '<div class="row"><div class="t"><b>'+s.t+' ج.م</b><small>'+esc(s.items)+'</small></div><small>'+s.d+'</small></div>'}).join(''):'<div class="empty">لم تتم أي عملية بيع بعد</div>';
+}
+function all(){renderSell();renderInv();renderSum();save()}
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest('button');if(!b)return;var D=b.dataset;
+  if(D.t){['sell','stock','sum'].forEach(function(t){$(t).classList.toggle('hide',t!==D.t)});
+    document.querySelectorAll('#tabs button').forEach(function(x){x.classList.toggle('on',x===b)});renderSum();return}
+  if(D.add){cart[D.add]=Math.min((cart[D.add]||0)+1,S.meds.filter(function(m){return m.id==D.add})[0].q);renderSell()}
+  if(D.inc){var m=S.meds.filter(function(x){return x.id==D.inc})[0];if(cart[D.inc]<m.q)cart[D.inc]++;renderSell()}
+  if(D.dec){cart[D.dec]--;if(cart[D.dec]<=0)delete cart[D.dec];renderSell()}
+  if(D.price){var np=parseFloat(prompt('السعر الجديد (ج.م)؟'));if(np>=0){S.meds.filter(function(x){return x.id==D.price})[0].p=np;all()}}
+  if(D.restock){var n=parseInt(prompt('الكمية الموردة؟'),10);if(n>0){S.meds.filter(function(x){return x.id==D.restock})[0].q+=n;all()}}
+  if(D.del){if(confirm('حذف هذا الدواء من المخزون؟')){S.meds=S.meds.filter(function(x){return x.id!=D.del});delete cart[D.del];all()}}
+});
+$('checkout').onclick=function(){
+  var ids=Object.keys(cart);if(!ids.length)return;var t=0,items=[];
+  ids.forEach(function(id){var m=S.meds.filter(function(x){return x.id==id})[0];m.q-=cart[id];t+=m.p*cart[id];items.push(m.n+' ×'+cart[id])});
+  S.sales.push({d:today(),t:t,items:items.join('، ')});cart={};all();
+};
+$('add').onclick=function(){
+  var n=$('fn').value.trim(),p=parseFloat($('fp').value),q=parseInt($('fq').value,10);
+  if(!n||isNaN(p)||isNaN(q)){alert('اكتب الاسم والسعر والكمية');return}
+  S.meds.push({id:Date.now(),n:n,p:p,q:q,e:$('fe').value});
+  ['fn','fp','fq','fe'].forEach(function(i){$(i).value=''});all();
+};
+var C='باراسيتامول 500 مجم|25|60;بانادول إكسترا|45|40;بروفين 400 مجم|38|50;فولتارين 50 مجم|55|30;كتافلام 50 مجم|60|30;أوجمنتين 1 جم|120|25;أموكسيسيلين 500 مجم|48|35;زيثروماكس 500 مجم|85|20;سيبروفلوكساسين 500 مجم|70|25;فلاجيل 500 مجم|30|40;نيكسيوم 40 مجم|150|20;أومبرازول 20 مجم|45|40;كونترولوك 40 مجم|130|20;موتيليوم|42|35;بسكوبان|40|35;سبازمو-ديجستين|35|30;جاستروفيت|30|30;إيموديوم|28|30;أوراسيت أملاح الجفاف|12|50;كلاريتين 10 مجم|65|35;زيرتك 10 مجم|70|30;أنتينال|35|30;بيتادين محلول|32|30;دتول|40|20;سولبادين|30|50;كونجستال|35|40;أبيمول شراب|22|30;كاتافاست|38|30;فيتامين سي 1000 مجم|55|40;فيتامين د3 5000|60|30;أوميغا 3|180|20;كالسيوم ماغنسيوم|95|25;حديد فيروجلوبين|110|20;جلوكوفاج 500 مجم|40|30;كونكور 5 مجم|75|25;نورفاسك 5 مجم|85|25;ليبيتور 20 مجم|160|20;أسبرين بروتكت 100 مجم|35|40;فنتولين بخاخ|55|20;نوفالجين|32|40'.split(';');
+$('bulk').onclick=function(){var have={};S.meds.forEach(function(m){have[m.n]=1});var n=0;C.forEach(function(s,i){var a=s.split('|');if(have[a[0]])return;var x=new Date();x.setDate(x.getDate()+200+i*17);S.meds.push({id:Date.now()+i,n:a[0],p:+a[1],q:+a[2],e:x.toISOString().slice(0,10)});n++});all();alert('تمت إضافة '+n+' صنف');};
+$('q').oninput=renderSell;$('sq').oninput=renderInv;$('shopName').value=S.name;$('docName').value=S.doc;$('shopName').onchange=save;$('docName').onchange=save;
+all();
+})();
+</script>
+</body>
+</html>
