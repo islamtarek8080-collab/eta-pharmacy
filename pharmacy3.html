@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ETA Pharmacy</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f7f5;--card:#fff;--ink:#12332e;--mute:#5d7770;--line:#d5e3de;--pri:#0f766e;--priInk:#fff;--warn:#b45309;--warnBg:#fdf1de;--bad:#b3261e;--badBg:#fce8e6;--ok:#15803d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1c19;--card:#16282480;--ink:#e6f2ee;--mute:#93b0a8;--line:#27403a;--pri:#2dd4bf;--priInk:#06201c;--warn:#f5b350;--warnBg:#3a2a10;--bad:#ff8a80;--badBg:#3d1816;--ok:#6ee7a0}}
+:root[data-theme="dark"]{--bg:#0e1c19;--card:#162824;--ink:#e6f2ee;--mute:#93b0a8;--line:#27403a;--pri:#2dd4bf;--priInk:#06201c;--warn:#f5b350;--warnBg:#3a2a10;--bad:#ff8a80;--badBg:#3d1816;--ok:#6ee7a0}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Tajawal,Tahoma,Arial,sans-serif;line-height:1.6}
+header{padding:18px 16px 8px;max-width:760px;margin:auto}
+header input.name{font:700 22px Tajawal,Tahoma,sans-serif;background:none;border:0;color:var(--ink);width:100%;padding:0}
+header p{margin:0;color:var(--mute);font-size:14px}
+header input.doc{font:500 16px Tajawal,Tahoma,sans-serif;background:none;border:0;color:var(--pri);width:100%;padding:0 0 4px}
+nav{display:flex;gap:6px;max-width:760px;margin:8px auto;padding:0 16px}
+nav button{flex:1;padding:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;font:500 15px Tajawal,Tahoma,sans-serif;cursor:pointer}
+nav button.on{background:var(--pri);color:var(--priInk);border-color:var(--pri);font-weight:700}
+main{max-width:760px;margin:auto;padding:8px 16px 40px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+input,button{font-family:inherit}
+input[type=text],input[type=number],input[type=date],input[type=search]{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:15px}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+nav{gap:4px}nav button{padding:9px 2px;font-size:13px}label{display:block;font-size:13px;color:var(--mute);margin-top:8px}
+.grid label{margin-top:0}
+select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;margin-bottom:8px}
+textarea{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;font:inherit}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.grid label{font-size:13px;color:var(--mute)}
+.btn{padding:10px 16px;border:0;border-radius:8px;background:var(--pri);color:var(--priInk);font-weight:700;font-size:15px;cursor:pointer}
+.btn.ghost{background:none;color:var(--bad);border:1px solid var(--line);padding:6px 10px;font-size:13px}
+.btn.sm{padding:6px 12px;font-size:13px}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .t{flex:1 1 180px;min-width:0}
+.row .t b{display:block}
+.row .t small{color:var(--mute);display:block}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:99px;margin-inline-start:6px}
+.tag.w{background:var(--warnBg);color:var(--warn)}
+.tag.b{background:var(--badBg);color:var(--bad)}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:16px;cursor:pointer}
+.total{display:flex;justify-content:space-between;font-size:20px;font-weight:700;padding:10px 0}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.stat span{color:var(--mute);font-size:13px}
+.stat b{display:block;font-size:24px}
+h2{font-size:16px;margin:0 0 8px}
+.empty{color:var(--mute);text-align:center;padding:18px 0}
+.hide{display:none}
+</style>
+</head>
+<body>
+<header>
+  <input class="name" id="shopName" value="ETA Pharmacy" dir="auto" readonly aria-label="اسم الصيدلية">
+  <input class="doc" id="docName" value="Dr. Eslam Tarek Eldabea" dir="auto" readonly aria-label="اسم الدكتور">
+  <p>مبيعات ومخزون وتنبيهات الصلاحية — <span id="sync">محفوظ على هذا الجهاز فقط</span></p>
+</header>
+<nav id="tabs">
+  <button data-t="sell" class="on">البيع</button>
+  <button data-t="stock">المخزون</button>
+  <button data-t="sum">الملخص</button>
+  <button data-t="adm">الإدارة</button>
+  <button data-t="ppl">الجهات</button>
+  <button data-t="acc">الحساب</button>
+</nav>
+<main>
+  <section id="sell">
+    <div class="box">
+      <select id="catQ" aria-label="القسم"></select>
+      <input type="search" id="q" placeholder="ابحث بالاسم أو الباركود أو الاستخدام">
+      <button class="btn sm" data-scan="q" style="margin-bottom:8px">مسح باركود بالكاميرا</button>
+      <button class="btn sm" data-scan="info" style="margin-bottom:8px">استعلام عن منتج</button>
+      <div id="results"></div>
+    </div>
+    <div class="box">
+      <h2>الفاتورة الحالية</h2>
+      <div id="cart"></div>
+      <div class="total"><span>الإجمالي</span><span id="cartTotal">0</span></div>
+      <button class="btn" id="checkout" style="width:100%">تأكيد البيع</button>
+    </div>
+  </section>
+
+  <section id="stock" class="hide">
+    <div class="box">
+      <h2>إضافة دواء</h2>
+      <div class="grid">
+        <div><label for="fn">الاسم</label><input type="text" id="fn"></div>
+        <div><label for="fp">السعر (ج.م)</label><input type="number" id="fp" min="0" step="0.5"></div>
+        <div><label for="fq">الكمية</label><input type="number" id="fq" min="0"></div>
+        <div><label for="fe">تاريخ الصلاحية</label><input type="date" id="fe"></div>
+        <div style="grid-column:1/-1"><label for="fb">الباركود</label><input type="text" id="fb" inputmode="numeric"><button type="button" class="btn sm" data-scan="fb" style="margin-top:6px">مسح بالكاميرا</button></div>
+        <div style="grid-column:1/-1"><label for="fc">القسم</label><select id="fc"></select></div>
+        <div style="grid-column:1/-1"><label for="fi">دواعي الاستعمال</label><input type="text" id="fi"></div>
+      </div>
+      <button class="btn" id="add" style="margin-top:10px">حفظ الدواء</button>
+      <button class="btn ghost" id="bulk" style="margin-top:10px;margin-inline-start:8px;color:var(--pri)">إضافة الأدوية الشائعة</button>
+    </div>
+    <div class="box">
+      <select id="catS" aria-label="القسم"></select>
+      <input type="search" id="sq" placeholder="ابحث بالاسم أو الباركود أو الاستخدام">
+      <button class="btn sm" data-scan="sq" style="margin-bottom:8px">مسح باركود بالكاميرا</button>
+      <div id="inv"></div>
+    </div>
+  </section>
+
+  <section id="acc" class="hide">
+    <div class="box"><h2>بيانات الصيدلية</h2><label for="an">اسم الصيدلية</label><input type="text" id="an"><label for="ad">اسم الدكتور</label><input type="text" id="ad"><button class="btn" id="aSave" style="margin-top:10px">حفظ الأسماء</button></div>
+    <div class="box"><h2>كلمة المرور</h2><p style="margin:0;color:var(--mute);font-size:13px">بعد الحفظ التطبيق بيطلبها عند كل فتح، وتعديل الأسماء وكلمة المرور بيطلبها تاني. احفظها في مكان آمن، لأنها مش بتتسترجع.</p><input type="password" id="pw1" placeholder="كلمة مرور جديدة (6 أحرف على الأقل)" style="margin-top:8px"><input type="password" id="pw2" placeholder="أعد كتابتها" style="margin-top:8px"><div style="margin-top:8px"><button class="btn sm" id="pwSave">حفظ كلمة المرور</button> <button class="btn ghost" id="pwOff">إلغاء القفل</button></div></div>
+    <div class="box"><h2>بصمة الإصبع أو الوجه</h2><p style="margin:0;color:var(--mute);font-size:13px">بتتفعل على الجهاز اللي أنت فيه بس، ولازم تكون عامل كلمة مرور الأول. كل جهاز لازم تفعلها عليه من هنا.</p><div style="margin-top:8px"><button class="btn sm" id="bioOn">تفعيل البصمة</button> <button class="btn ghost" id="bioOff">إلغاء</button></div><div id="bioSt" style="margin-top:6px;font-size:13px;color:var(--mute)"></div></div>
+    <div class="box"><h2>بيانات التواصل</h2><p style="margin:0;color:var(--mute);font-size:13px">بتتحفظ كمعلومات فقط. تسجيل الدخول بجوجل أو فيسبوك أو رسالة على الموبايل محتاج خدمة خارجية.</p><label for="aph">رقم الموبايل</label><input type="text" id="aph" inputmode="tel"><label for="agm">إيميل جوجل</label><input type="text" id="agm"><label for="afb">حساب فيسبوك</label><input type="text" id="afb"><button class="btn sm" id="cSave" style="margin-top:10px">حفظ</button></div>
+  </section>
+
+  <section id="ppl" class="hide">
+    <div class="box"><h2>إضافة مورد أو موزع أو موظف</h2><div class="grid"><div><label for="pt">النوع</label><select id="pt"><option>مورد</option><option>موزع</option><option>موظف</option></select></div><div><label for="pn">الاسم</label><input type="text" id="pn"></div><div><label for="ph">الموبايل</label><input type="text" id="ph" inputmode="tel"></div><div><label for="px">ملاحظات أو الوظيفة</label><input type="text" id="px"></div></div><button class="btn" id="pAdd" style="margin-top:10px">حفظ</button></div>
+    <div class="box"><select id="pf" aria-label="النوع"><option value="">الكل</option><option>مورد</option><option>موزع</option><option>موظف</option></select><div id="pList"></div></div>
+  </section>
+
+  <section id="adm" class="hide">
+    <div class="box"><h2>بيانات الصيدلية</h2><div class="grid"><div><label for="acName">اسم الصيدلية</label><input type="text" id="acName" dir="auto"></div><div><label for="acDoc">اسم الدكتور</label><input type="text" id="acDoc" dir="auto"></div></div><button class="btn sm" id="acSave" style="margin-top:8px">حفظ</button></div>
+    <div class="box"><h2>كلمة المرور</h2><p style="margin:0 0 8px;color:var(--mute);font-size:13px">يقفل تابي المخزون والإدارة. قفل بسيط لمنع الاستخدام بالخطأ، وليس حماية كاملة.</p><input type="password" id="pin" autocomplete="new-password" placeholder="كلمة مرور جديدة، أو اتركها فارغة لإلغاء القفل"><button class="btn sm" id="pinSave" style="margin-top:8px">حفظ</button></div>
+    <div class="box"><h2>البصمة والوجه</h2><p style="margin:0 0 8px;color:var(--mute);font-size:13px">بديل لكلمة المرور على هذا الجهاز ببصمة الإصبع أو الوجه حسب جهازك. بتتفعّل على كل جهاز لوحده.</p><button class="btn sm" id="bioOn">تفعيل البصمة أو الوجه</button> <button class="btn ghost" id="bioOff">إيقاف</button></div>
+    <div class="box"><h2>المصروفات</h2><div class="grid"><div><label for="xn">البند</label><input type="text" id="xn"></div><div><label for="xa">المبلغ (ج.م)</label><input type="number" id="xa" min="0"></div></div><button class="btn" id="expAdd" style="margin-top:10px">إضافة مصروف</button><div id="expList"></div></div>
+    <div class="box"><h2>تقرير الشهر</h2><div id="rep"></div></div>
+    <div class="box"><h2>نسخة احتياطية</h2><textarea id="bk" rows="4" style="width:100%"></textarea><div style="margin-top:8px"><button class="btn sm" id="bkOut">عرض النسخة</button> <button class="btn sm" id="bkIn">استيراد</button></div></div>
+  </section>
+
+  <section id="sum" class="hide">
+    <div class="stats" id="stats"></div>
+    <div class="box" style="margin-top:12px"><h2>يحتاج انتباه</h2><div id="alerts"></div></div>
+    <div class="box"><h2>آخر المبيعات</h2><div id="log"></div></div>
+  </section>
+</main>
+<div id="lock" style="display:none;position:fixed;inset:0;z-index:90;background:var(--bg);align-items:center;justify-content:center;padding:24px"><div class="box" style="width:100%;max-width:360px"><h2>تسجيل الدخول</h2><input type="password" id="lpw" placeholder="كلمة المرور"><button class="btn" id="lgo" style="width:100%;margin-top:10px">دخول</button><button class="btn sm" id="lbio" style="width:100%;margin-top:8px;display:none">دخول بالبصمة أو الوجه</button><div id="lerr" style="color:var(--bad);font-size:13px;margin-top:6px"></div></div></div>
+<script>
+(function(){
+var K='pharmacy-app-v1';
+var S={meds:[],sales:[],name:'ETA Pharmacy'};
+try{var r=localStorage.getItem(K);if(r){var p=JSON.parse(r);if(p&&p.meds)S=p}}catch(e){}
+if(!S.name||S.name==='صيدليتي')S.name='ETA Pharmacy';
+if(!S.doc)S.doc='Dr. Eslam Tarek Eldabea';
+if(!S.meds.length&&!S.sales.length){
+  var d=function(n){var x=new Date();x.setDate(x.getDate()+n);return x.toISOString().slice(0,10)};
+  S.meds=[{id:1,n:'باراسيتامول 500 مجم',p:25,q:40,e:d(400)},{id:2,n:'أموكسيسيلين 1 جم',p:68,q:4,e:d(60)},{id:3,n:'فيتامين د 50000',p:90,q:12,e:d(250)}];
+}
+function save(){S.name=$('shopName').value;S.doc=$('docName').value;try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}push()}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function days(e){return e?Math.floor((new Date(e)-new Date())/864e5):9999}
+function tags(m){var t=m.cat&&m.cat!=='أدوية'?'<span class="tag" style="background:var(--line)">'+esc(m.cat)+'</span>':'',dd=days(m.e);
+  if(dd<0)t+='<span class="tag b">منتهي الصلاحية</span>';else if(dd<=90)t+='<span class="tag w">ينتهي خلال '+dd+' يوم</span>';
+  if(m.q<=0)t+='<span class="tag b">نفد</span>';else if(m.q<=5)t+='<span class="tag w">كمية قليلة</span>';return t}
+var cart={};
+function sellable(m){return m.q>0&&days(m.e)>=0}
+function renderSell(){
+  var q=$('q').value.trim(),list=find(q,$('catQ').value).slice(0,15);
+  $('results').innerHTML=list.length?list.map(function(m){
+    return '<div class="row"><div class="t"><b>'+esc(m.n)+tags(m)+'</b><small>'+m.p+' ج.م — متاح '+m.q+'</small>'+(m.ind?'<small>دواعي الاستعمال: '+esc(m.ind)+'</small>':'')+'</div>'+
+    (sellable(m)?'<button class="btn sm" data-add="'+m.id+'">إضافة</button>':'')+'</div>'}).join(''):'<div class="empty">لا توجد نتائج</div>';
+  var ids=Object.keys(cart),tot=0;
+  $('cart').innerHTML=ids.length?ids.map(function(id){var m=S.meds.filter(function(x){return x.id==id})[0];tot+=m.p*cart[id];
+    return '<div class="row"><div class="t"><b>'+esc(m.n)+'</b><small>'+(m.p*cart[id])+' ج.م</small></div><div class="qty"><button data-dec="'+id+'" aria-label="إنقاص">−</button><span>'+cart[id]+'</span><button data-inc="'+id+'" aria-label="زيادة">+</button></div></div>'}).join(''):'<div class="empty">أضف أدوية من نتائج البحث لبدء فاتورة</div>';
+  $('cartTotal').textContent=tot+' ج.م';
+}
+function renderInv(){
+  var q=$('sq').value.trim(),list=find(q,$('catS').value);
+  $('inv').innerHTML=list.length?list.map(function(m){
+    return '<div class="row"><div class="t"><b>'+esc(m.n)+tags(m)+'</b><small>'+m.p+' ج.م — الكمية '+m.q+(m.e?' — صلاحية '+m.e:'')+(m.bc?' — باركود '+esc(m.bc):'')+'</small>'+(m.ind?'<small>دواعي الاستعمال: '+esc(m.ind)+'</small>':'')+'</div>'+
+    '<button class="btn sm" data-bcset="'+m.id+'">باركود</button><button class="btn sm" data-price="'+m.id+'">سعر</button><button class="btn sm" data-restock="'+m.id+'">توريد</button><button class="btn ghost" data-del="'+m.id+'">حذف</button></div>'}).join(''):'<div class="empty">المخزون فارغ. أضف أول دواء من النموذج أعلاه</div>';
+}
+function today(){return new Date().toISOString().slice(0,10)}
+function renderSum(){
+  var ts=S.sales.filter(function(s){return s.d===today()}).reduce(function(a,s){return a+s.t},0);
+  var low=S.meds.filter(function(m){return m.q<=5}).length,exp=S.meds.filter(function(m){return days(m.e)<=90}).length;
+  $('stats').innerHTML=[['مبيعات اليوم',ts+' ج.م'],['عدد الأصناف',S.meds.length],['كمية قليلة',low],['قريب الانتهاء',exp]].map(function(a){return '<div class="stat"><span>'+a[0]+'</span><b>'+a[1]+'</b></div>'}).join('');
+  var al=S.meds.filter(function(m){return m.q<=5||days(m.e)<=90});
+  $('alerts').innerHTML=al.length?al.map(function(m){return '<div class="row"><div class="t"><b>'+esc(m.n)+tags(m)+'</b></div></div>'}).join(''):'<div class="empty">لا توجد تنبيهات</div>';
+  $('log').innerHTML=S.sales.length?S.sales.slice(-8).reverse().map(function(s){return '<div class="row"><div class="t"><b>'+s.t+' ج.م</b><small>'+esc(s.items)+'</small></div><small>'+s.d+'</small></div>'}).join(''):'<div class="empty">لم تتم أي عملية بيع بعد</div>';
+}
+function all(){renderSell();renderInv();renderSum();renderAdm();renderPpl();save()}
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest('button');if(!b)return;var D=b.dataset;
+  if(D.t){if((D.t==='stock'||D.t==='adm'||D.t==='ppl')&&(S.pw||S.pin)&&!unl){if(hasBio()&&confirm('فتح بالبصمة أو الوجه؟ موافق = بصمة، إلغاء = كلمة المرور')){bioAuth().then(function(ok){if(ok){unl=true;b.click()}else alert('فشل التحقق بالبصمة')});return}var pp=prompt('كلمة المرور');if(!okpw(pp))return;unl=true}['sell','stock','sum','adm','ppl','acc'].forEach(function(t){$(t).classList.toggle('hide',t!==D.t)});
+    document.querySelectorAll('#tabs button').forEach(function(x){x.classList.toggle('on',x===b)});renderSum();return}
+  if(D.add){cart[D.add]=Math.min((cart[D.add]||0)+1,S.meds.filter(function(m){return m.id==D.add})[0].q);renderSell()}
+  if(D.inc){var m=S.meds.filter(function(x){return x.id==D.inc})[0];if(cart[D.inc]<m.q)cart[D.inc]++;renderSell()}
+  if(D.dec){cart[D.dec]--;if(cart[D.dec]<=0)delete cart[D.dec];renderSell()}
+  if(D.price){var np=parseFloat(prompt('السعر الجديد (ج.م)؟'));if(np>=0){S.meds.filter(function(x){return x.id==D.price})[0].p=np;all()}}
+  if(D.restock){var n=parseInt(prompt('الكمية الموردة؟'),10);if(n>0){S.meds.filter(function(x){return x.id==D.restock})[0].q+=n;all()}}
+  if(D.del){if(confirm('حذف هذا الدواء من المخزون؟')){S.meds=S.meds.filter(function(x){return x.id!=D.del});delete cart[D.del];all()}}
+});
+$('checkout').onclick=function(){
+  var ids=Object.keys(cart);if(!ids.length)return;var t=0,items=[];
+  ids.forEach(function(id){var m=S.meds.filter(function(x){return x.id==id})[0];m.q-=cart[id];t+=m.p*cart[id];items.push(m.n+' ×'+cart[id])});
+  S.sales.push({d:today(),t:t,items:items.join('، ')});cart={};all();
+};
+$('add').onclick=function(){
+  var n=$('fn').value.trim(),p=parseFloat($('fp').value),q=parseInt($('fq').value,10);
+  if(!n||isNaN(p)||isNaN(q)){alert('اكتب الاسم والسعر والكمية');return}
+  S.meds.push({id:Date.now(),n:n,p:p,q:q,e:$('fe').value,ind:$('fi').value.trim(),cat:$('fc').value,bc:$('fb').value.trim()});
+  ['fn','fp','fq','fe','fi','fb'].forEach(function(i){$(i).value=''});all();
+};
+var C='باراسيتامول 500 مجم|25|60;بانادول إكسترا|45|40;بروفين 400 مجم|38|50;فولتارين 50 مجم|55|30;كتافلام 50 مجم|60|30;أوجمنتين 1 جم|120|25;أموكسيسيلين 500 مجم|48|35;زيثروماكس 500 مجم|85|20;سيبروفلوكساسين 500 مجم|70|25;فلاجيل 500 مجم|30|40;نيكسيوم 40 مجم|150|20;أومبرازول 20 مجم|45|40;كونترولوك 40 مجم|130|20;موتيليوم|42|35;بسكوبان|40|35;سبازمو-ديجستين|35|30;جاستروفيت|30|30;إيموديوم|28|30;أوراسيت أملاح الجفاف|12|50;كلاريتين 10 مجم|65|35;زيرتك 10 مجم|70|30;أنتينال|35|30;بيتادين محلول|32|30;دتول|40|20;سولبادين|30|50;كونجستال|35|40;أبيمول شراب|22|30;كاتافاست|38|30;فيتامين سي 1000 مجم|55|40;فيتامين د3 5000|60|30;أوميغا 3|180|20;كالسيوم ماغنسيوم|95|25;حديد فيروجلوبين|110|20;جلوكوفاج 500 مجم|40|30;كونكور 5 مجم|75|25;نورفاسك 5 مجم|85|25;ليبيتور 20 مجم|160|20;أسبرين بروتكت 100 مجم|35|40;فنتولين بخاخ|55|20;نوفالجين|32|40'.split(';');
+$('bulk').onclick=function(){var have={};S.meds.forEach(function(m){have[m.n]=1});var n=0;C.forEach(function(s,i){var a=s.split('|');if(have[a[0]])return;var x=new Date();x.setDate(x.getDate()+200+i*17);S.meds.push({id:Date.now()+i,n:a[0],p:+a[1],q:+a[2],e:x.toISOString().slice(0,10)});n++});all();alert('تمت إضافة '+n+' صنف');};
+function norm(s){return String(s||'').toLowerCase().replace(/[\u064B-\u0652\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[٠-٩]/g,function(d){return d.charCodeAt(0)-1632})}
+function find(q,c){var t=norm(q).split(/\s+/).filter(Boolean);return S.meds.filter(function(m){if(c&&(m.cat||'أدوية')!==c)return false;var h=norm(m.n+' '+(m.en||'')+' '+(m.ind||'')+' '+(m.cat||'')+' '+(m.bc||'')+' '+m.p+' '+(m.e||''));return t.every(function(x){return h.indexOf(x)>-1})}).sort(function(a,b){return rank(b,t)-rank(a,t)})}
+var C2='باراسيتامول 500 مجم|Paracetamol|25|مسكن وخافض للحرارة;بانادول إكسترا|Panadol Extra|45|صداع وآلام وخفض الحرارة;بروفين 400 مجم|Brufen|38|مسكن ومضاد التهاب;فولتارين 50 مجم|Voltaren|55|آلام المفاصل والعضلات;كتافلام 50 مجم|Cataflam|60|آلام الأسنان والدورة والمفاصل;أوجمنتين 1 جم|Augmentin|120|التهابات بكتيرية (جيوب، صدر، لوز);أموكسيسيلين 500 مجم|Amoxil|48|التهابات بكتيرية;أموكسيسيلين 1 جم|Amoxicillin|68|التهابات بكتيرية;زيثروماكس 500 مجم|Zithromax|85|التهابات الصدر والحلق;سيبروفلوكساسين 500 مجم|Ciprofloxacin|70|التهابات المسالك البولية والمعدة;فلاجيل 500 مجم|Flagyl|30|الأميبا والجيارديا وبكتيريا لاهوائية;نيكسيوم 40 مجم|Nexium|150|ارتجاع وحموضة وقرحة;أومبرازول 20 مجم|Omeprazole|45|حموضة وقرحة;كونترولوك 40 مجم|Controloc|130|ارتجاع المريء;موتيليوم|Motilium|42|غثيان وقيء وانتفاخ;بسكوبان|Buscopan|40|مغص وتقلصات;سبازمو-ديجستين|Spasmo-Digestin|35|عسر هضم وانتفاخ;جاستروفيت|Gastrofait|30|حموضة وحرقان;إيموديوم|Imodium|28|إسهال;أوراسيت أملاح الجفاف|ORS|12|تعويض سوائل في الإسهال;كلاريتين 10 مجم|Claritin|65|حساسية وزكام تحسسي;زيرتك 10 مجم|Zyrtec|70|حساسية وأرتكاريا;أنتينال|Antinal|35|إسهال معوي;بيتادين محلول|Betadine|32|مطهر للجروح;دتول|Dettol|40|مطهر;سولبادين|Solpadeine|30|ألم وصداع;كونجستال|Congestal|35|برد وإنفلونزا واحتقان;أبيمول شراب|Abimol|22|خافض حرارة للأطفال;كاتافاست|Katafast|38|صداع نصفي وآلام;فيتامين سي 1000 مجم|Vitamin C|55|مناعة ونقص فيتامين سي;فيتامين د3 5000|Vitamin D3|60|نقص فيتامين د;فيتامين د 50000|Vitamin D|90|نقص فيتامين د;أوميغا 3|Omega 3|180|صحة القلب والدهون;كالسيوم ماغنسيوم|Calcium Mg|95|هشاشة العظام ونقص الكالسيوم;حديد فيروجلوبين|Feroglobin|110|أنيميا نقص الحديد;جلوكوفاج 500 مجم|Glucophage|40|السكر النوع الثاني;كونكور 5 مجم|Concor|75|ضغط وقصور القلب;نورفاسك 5 مجم|Norvasc|85|ضغط مرتفع وذبحة;ليبيتور 20 مجم|Lipitor|160|الكوليسترول;أسبرين بروتكت 100 مجم|Aspirin Protect|35|سيولة الدم ووقاية القلب;فنتولين بخاخ|Ventolin|55|ضيق التنفس والربو;نوفالجين|Novalgin|32|مسكن وخافض حرارة;فولتارين جل|Voltaren Gel|60|آلام العضلات والمفاصل موضعيا;ميلوكسيكام 15 مجم|Mobic|50|التهاب المفاصل;سيفترياكسون حقن|Rocephin|65|التهابات بكتيرية شديدة;سيفيكسيم 400 مجم|Suprax|90|التهابات الأذن والحلق والمسالك;كلاريثروميسين 500 مجم|Klacid|110|التهابات الصدر والجيوب;دوكسيسيكلين 100 مجم|Doxycycline|40|التهابات صدرية وحب الشباب;ليفوفلوكساسين 500 مجم|Tavanic|140|التهابات الصدر والجيوب;سيفالكسين 500 مجم|Keflex|45|التهابات الجلد والحلق;فوسيدين كريم|Fucidin|55|التهابات الجلد البكتيرية;نيزورال شامبو|Nizoral|95|فطريات وقشرة الرأس;كانستين كريم|Canesten|45|فطريات جلدية;ديفلوكان 150 مجم|Diflucan|75|فطريات مهبلية وفموية;هيدروكورتيزون كريم|Hydrocortisone|25|التهاب وحساسية الجلد;بيبانثين كريم|Bepanthen|70|تشققات الجلد وحفاضات الأطفال;لوراتادين شراب|Loratadine|28|حساسية للأطفال;ديسلوراتادين 5 مجم|Aerius|75|حساسية موسمية;ديكساميثازون 0.5 مجم|Dexamethasone|20|التهاب وحساسية شديدة;بريدنيزولون 5 مجم|Prednisolone|25|التهابات مناعية وربو;أمبروكسول شراب|Ambroxol|30|كحة بلغم;بروسبان شراب|Prospan|75|كحة وسعال;ستربسيلز|Strepsils|30|التهاب الحلق;أفرين بخاخ أنف|Afrin|40|احتقان الأنف;سالين نازال|Nasal Saline|25|ترطيب وغسيل الأنف;أوتريفين قطرة أنف|Otrivin|38|زكام وانسداد الأنف;فيزين قطرة عين|Visine|40|احمرار وجفاف العين;جلوكوفاج 1000 مجم|Glucophage XR|65|السكر النوع الثاني;ديامايكرون 60 مجم|Diamicron|85|السكر النوع الثاني;جانوفيا 100 مجم|Januvia|420|السكر النوع الثاني;ليفوثيروكسين 100 مجم|Eltroxin|45|قصور الغدة الدرقية;إندرال 40 مجم|Inderal|30|ضغط وخفقان وصداع نصفي;أملور 5 مجم|Amlor|70|ضغط مرتفع;لوسارتان 50 مجم|Cozaar|95|ضغط وحماية الكلى;كابوتين 25 مجم|Capoten|30|ضغط وقصور القلب;لازيكس 40 مجم|Lasix|25|مدر للبول وتورم الأقدام;كلوبيدوجريل 75 مجم|Plavix|150|سيولة الدم بعد الجلطات;روزوفاستاتين 10 مجم|Crestor|170|الكوليسترول والدهون;ديجوكسين 0.25 مجم|Digoxin|20|قصور القلب وعدم انتظام النبض;نيتروجلسرين لسان|Nitrolingual|55|ذبحة صدرية;زانتاك 150 مجم|Zantac|35|حموضة وقرحة;فاموتيدين 40 مجم|Pepcid|30|حموضة وقرحة;ريني|Rennie|28|حموضة فورية;دوفلاك شراب|Duphalac|65|إمساك;ميتاميوسيل|Metamucil|85|إمساك وألياف;فلورستور|Florastor|110|توازن بكتيريا الأمعاء;زنك 50 مجم|Zinc|45|مناعة وتساقط الشعر;ماغنيسيوم 400 مجم|Magnesium|70|تقلصات عضلية وتوتر;فيتامين ب12|Vitamin B12|85|تنميل الأطراف ونقص ب12;نيوروبيون|Neurobion|65|التهاب الأعصاب ونقص فيتامين ب;فوليك أسيد 5 مجم|Folic Acid|15|الحمل وأنيميا;سنتروم|Centrum|220|مكمل فيتامينات ومعادن;ميلاتونين 3 مجم|Melatonin|90|اضطراب النوم;ميبو|MEBO|65|حروق وجروح;كحول طبي 70%|Alcohol|15|تطهير الجلد والأدوات;بلاستر جروح|Plaster|20|تغطية الجروح الصغيرة;أوتيباكس|Otipax|55|التهاب الأذن وألمها;كالامين لوشن|Calamine|25|حكة ولدغات الحشرات;فازلين|Vaseline|20|ترطيب وتشققات الجلد;واقي شمس SPF50|Sunscreen|180|الوقاية من حروق الشمس;بنادول نايت|Panadol Night|50|صداع مع صعوبة النوم;بنادول كولد وفلو|Panadol Cold Flu|40|أعراض البرد والإنفلونزا;هيدروكسيزين 25 مجم|Atarax|40|حكة وقلق خفيف;ألفا ليبويك|Alpha Lipoic|120|التهاب الأعصاب السكري;شرائط قياس السكر|Test Strips|150|متابعة سكر الدم'.split(';');
+function merge(){var idx={};S.meds.forEach(function(m){idx[norm(m.n)]=m});var n=0;C2.forEach(function(s,i){var a=s.split('|'),m=idx[norm(a[0])];if(m){m.en=m.en||a[1];m.ind=m.ind||a[3];return}var x=new Date();x.setDate(x.getDate()+200+i*13);S.meds.push({id:Date.now()+i,n:a[0],en:a[1],p:+a[2],q:10+(i*7)%40,e:x.toISOString().slice(0,10),ind:a[3]});n++});return n}
+var unl=false,DB=null,tm;
+var CATS=['أدوية','مستحضرات تجميل','كريمات الشعر','مراهم حبوب الوجه','العظام'];
+[['catQ','كل الأقسام'],['catS','كل الأقسام'],['fc','']].forEach(function(a){$(a[0]).innerHTML=(a[1]?'<option value="">'+a[1]+'</option>':'')+CATS.map(function(c){return '<option>'+c+'</option>'}).join('')});
+var C3='سيتافيل غسول|Cetaphil Cleanser|220|غسول لطيف للبشرة الحساسة والجافة|1;سيتافيل مرطب|Cetaphil Moisturizer|260|ترطيب البشرة الجافة والحساسة|1;بيوديرما ميسلار ماء|Bioderma Micellar|330|إزالة المكياج وتنظيف البشرة|1;لاروش بوزيه واقي شمس SPF50|La Roche-Posay SPF50|520|حماية من الشمس للبشرة الحساسة|1;أفين واقي شمس|Avene Sunscreen|480|حماية البشرة من الشمس|1;يوسيرين كريم مرطب|Eucerin Cream|290|ترطيب الجلد شديد الجفاف|1;فازلين مرطب للشفايف|Lip Balm|35|تشقق الشفايف|1;كريم أيدي|Hand Cream|60|جفاف اليدين|1;نيفيا كريم|Nivea Cream|70|ترطيب عام للجسم والوجه|1;مزيل عرق|Deodorant|75|تقليل التعرق ورائحة العرق|1;شامبو أطفال|Baby Shampoo|65|غسيل شعر الأطفال بلطف|1;لوشن جسم|Body Lotion|90|ترطيب الجسم|1;كريم تحت العين|Eye Cream|250|الهالات وتعب حول العين|1;سيروم فيتامين سي|Vitamin C Serum|320|إشراق البشرة ومقاومة الأكسدة|1;سيروم هيالورونيك|Hyaluronic Serum|290|ترطيب عميق للبشرة|1;مينوكسيديل 5%|Minoxidil 5%|180|تساقط الشعر الوراثي|2;مينوكسيديل 2%|Minoxidil 2%|140|تساقط الشعر الوراثي|2;بانتوجار كبسولات|Pantogar|520|تساقط وضعف الشعر والأظافر|2;بيوتين 5000 مجم|Biotin|150|تقوية الشعر والأظافر|2;كريم ترطيب للشعر|Leave-in Cream|110|ترطيب وتنعيم الشعر الجاف|2;كريم تنعيم الشعر|Smoothing Cream|130|فرد وتنعيم الشعر|2;ماسك الشعر|Hair Mask|160|تغذية الشعر التالف|2;زيت الأرغان|Argan Oil|200|لمعان وترطيب الشعر|2;زيت الخروع|Castor Oil|45|تغذية الشعر والرموش|2;شامبو ضد القشرة|Anti-dandruff Shampoo|110|قشرة الرأس|2;تونيك تقوية الشعر|Hair Tonic|170|تقوية فروة الرأس|2;سيروم للشعر|Hair Serum|140|تقليل التقصف ولمعان الشعر|2;ديفرين جل|Differin Gel|190|حبوب الوجه والرؤوس السوداء|3;بنزاك 5% جل|Benzac 5%|110|حبوب الوجه الالتهابية|3;كليندامايسين جل|Clindamycin Gel|70|حبوب الوجه الالتهابية|3;ديوك جل|Duac Gel|240|حبوب الوجه المتوسطة|3;سكينورين كريم|Skinoren|220|حبوب الوجه وآثارها|3;أزيليك أسيد 20%|Azelaic Acid 20%|180|حبوب الوجه والتصبغات|3;ساليسيليك أسيد غسول|Salicylic Wash|130|الرؤوس السوداء والمسام المسدودة|3;غسول حبوب الشباب|Acne Face Wash|120|تنظيف البشرة الدهنية|3;كريم نياسيناميد 10%|Niacinamide|160|تنظيم الدهون وآثار الحبوب|3;بقع الحبوب|Acne Spot|60|تجفيف الحبة الواحدة|3;إريثرومايسين جل|Erythromycin Gel|65|حبوب الوجه الالتهابية|3;كريم آثار الحبوب|Scar Cream|200|آثار وندبات الحبوب|3;جلوكوزامين كوندرويتين|Glucosamine Chondroitin|230|خشونة المفاصل والغضاريف|4;كولاجين للمفاصل|Collagen|280|دعم الغضاريف والمفاصل|4;كالسيوم سيترات + د3|Calcium Citrate D3|130|هشاشة العظام وتقوية العظام|4;فيتامين K2 + D3|K2 D3|210|امتصاص الكالسيوم وصحة العظام|4;أوستيوكير|Osteocare|240|دعم العظام والكالسيوم|4;ديكلوفيناك جل 1%|Diclofenac Gel 1%|45|آلام العضلات والمفاصل موضعيا|4;مرهم ريباريل|Reparil Gel|90|كدمات وتورم وإصابات رياضية|4;ديب هيت بلسم|Deep Heat|65|آلام العضلات والظهر|4;لصقات ساخنة|Heat Patch|50|آلام الظهر والرقبة|4;مثبت رسغ|Wrist Brace|150|التواء الرسغ|4;حزام ظهر طبي|Back Support|280|آلام أسفل الظهر|4;دعامة ركبة|Knee Support|190|إصابات وخشونة الركبة|4;أوميغا 3 للمفاصل|Omega 3 Joints|200|التهاب المفاصل ودعم الحركة|4;ماغنيسيوم + كالسيوم|Mg Ca|110|تقلصات العضلات وصحة العظام|4'.split(';');
+function merge3(){var idx={};S.meds.forEach(function(m){idx[norm(m.n)]=m});var n=0;C3.forEach(function(s,i){var a=s.split('|'),m=idx[norm(a[0])];if(m){m.cat=m.cat||CATS[a[4]];return}var x=new Date();x.setDate(x.getDate()+300+i*11);S.meds.push({id:Date.now()+1000+i,n:a[0],en:a[1],p:+a[2],q:5+(i*5)%30,e:x.toISOString().slice(0,10),ind:a[3],cat:CATS[a[4]]});n++});return n}
+if(!S.v||S.v<2)merge();
+if(S.v!==3){merge3();S.v=3}
+function renderAdm(){var m=today().slice(0,7),sl=S.sales.filter(function(s){return s.d.slice(0,7)===m}).reduce(function(a,s){return a+s.t},0),ex=(S.exp||[]).filter(function(x){return x.d.slice(0,7)===m}).reduce(function(a,x){return a+x.a},0);
+$('rep').innerHTML='<div class="row"><div class="t"><b>مبيعات الشهر</b></div><b>'+sl+' ج.م</b></div><div class="row"><div class="t"><b>مصروفات الشهر</b></div><b>'+ex+' ج.م</b></div><div class="row"><div class="t"><b>المبيعات − المصروفات</b></div><b>'+(sl-ex)+' ج.م</b></div>';
+$('expList').innerHTML=(S.exp||[]).slice(-8).reverse().map(function(x){return '<div class="row"><div class="t"><b>'+esc(x.n)+'</b><small>'+x.d+'</small></div><b>'+x.a+' ج.م</b></div>'}).join('')||'<div class="empty">لا توجد مصروفات مسجلة</div>'}
+$('pinSave').onclick=function(){S.pin=$('pin').value.trim();$('pin').value='';all();alert(S.pin?'تم حفظ الرقم السري':'تم إلغاء القفل')};
+$('expAdd').onclick=function(){var a=parseFloat($('xa').value),n=$('xn').value.trim();if(!n||isNaN(a)){alert('اكتب البند والمبلغ');return}(S.exp=S.exp||[]).push({d:today(),a:a,n:n});$('xn').value='';$('xa').value='';all()};
+$('bkOut').onclick=function(){$('bk').value=JSON.stringify(S)};
+$('bkIn').onclick=function(){try{var r=JSON.parse($('bk').value);if(!r||!r.meds)throw 0;S=r;fill();all();alert('تم الاستيراد')}catch(e){alert('النسخة غير صالحة')}};
+$('catQ').onchange=renderSell;$('catS').onchange=renderInv;
+function renderPpl(){var f=$('pf').value,l=(S.ppl||[]).filter(function(x){return !f||x.t===f});$('pList').innerHTML=l.length?l.map(function(x){return '<div class="row"><div class="t"><b>'+esc(x.n)+'<span class="tag" style="background:var(--line)">'+x.t+'</span></b>'+(x.x?'<small>'+esc(x.x)+'</small>':'')+(x.p?'<small>'+esc(x.p)+'</small>':'')+'</div>'+(x.p?'<a class="btn sm" href="tel:'+esc(x.p)+'" style="text-decoration:none">اتصال</a>':'')+'<button class="btn ghost" data-pdel="'+x.id+'">حذف</button></div>'}).join(''):'<div class="empty">لا توجد جهات مسجلة. أضف أول مورد أو موظف من النموذج أعلاه</div>'}
+$('pAdd').onclick=function(){var n=$('pn').value.trim();if(!n){alert('اكتب الاسم');return}(S.ppl=S.ppl||[]).push({id:Date.now(),t:$('pt').value,n:n,p:$('ph').value.trim(),x:$('px').value.trim()});['pn','ph','px'].forEach(function(i){$(i).value=''});all()};
+$('pf').onchange=renderPpl;
+function hash(s){var h1=0xdeadbeef,h2=0x41c6ce57;s='eta:'+s;for(var i=0,c;i<s.length;i++){c=s.charCodeAt(i);h1=Math.imul(h1^c,2654435761);h2=Math.imul(h2^c,1597334677)}h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return String(4294967296*(2097151&h2)+(h1>>>0))}
+function okpw(p){if(p===null)return false;return S.pw?hash(p)===S.pw:p===S.pin}
+function hasBio(){try{return !!localStorage.getItem('eta-cred')}catch(e){return false}}
+function bioReg(){
+  if(!window.PublicKeyCredential||!navigator.credentials){alert('الجهاز أو المتصفح مش بيدعم البصمة. جرّب Chrome على موبايل فيه بصمة مفعّلة.');return}
+  var id=new Uint8Array(16),ch=new Uint8Array(32);crypto.getRandomValues(id);crypto.getRandomValues(ch);
+  navigator.credentials.create({publicKey:{challenge:ch,rp:{name:'ETA Pharmacy'},user:{id:id,name:'admin',displayName:'Admin'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},timeout:60000}}).then(function(c){try{localStorage.setItem('eta-cred',btoa(String.fromCharCode.apply(null,new Uint8Array(c.rawId))))}catch(e){}alert('تم تفعيل البصمة أو الوجه على هذا الجهاز')}).catch(function(){alert('لم يتم التفعيل. تأكد من تفعيل قفل الشاشة والبصمة في إعدادات الموبايل.')})}
+function bioAuth(){var raw;try{raw=Uint8Array.from(atob(localStorage.getItem('eta-cred')),function(c){return c.charCodeAt(0)})}catch(e){return Promise.resolve(false)}var ch=new Uint8Array(32);crypto.getRandomValues(ch);return navigator.credentials.get({publicKey:{challenge:ch,allowCredentials:[{type:'public-key',id:raw}],userVerification:'required',timeout:60000}}).then(function(){return true}).catch(function(){return false})}
+$('pinSave').onclick=function(){if(S.pw||S.pin){var cur=prompt('كلمة المرور الحالية');if(!okpw(cur))return}var p=$('pin').value;if(p&&p.length<4){alert('كلمة المرور لازم تكون 4 خانات على الأقل');return}S.pw=p?hash(p):'';S.pin='';$('pin').value='';all();alert(p?'تم حفظ كلمة المرور':'تم إلغاء القفل')};
+$('acSave').onclick=function(){S.name=$('acName').value.trim()||S.name;S.doc=$('acDoc').value.trim()||S.doc;fill();all();alert('تم الحفظ')};
+$('bioOn').onclick=function(){if(!(S.pw||S.pin)){alert('اعمل كلمة مرور أولا');return}if(!okpw(prompt('اكتب كلمة المرور للتأكيد')))return;bioReg()};
+$('bioOff').onclick=function(){try{localStorage.removeItem('eta-cred')}catch(e){}alert('تم إيقاف البصمة على هذا الجهاز')};
+fill();
+var BKEY='pharmacy-bio-v1';
+function hex(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2)}).join('')}
+function hashPw(p,s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+':'+p)).then(hex)}
+function hasBio(){try{return !!localStorage.getItem(BKEY)}catch(e){return false}}
+function openApp(){$('lock').style.display='none';unl=true}
+function tryBio(){var raw;try{raw=JSON.parse(localStorage.getItem(BKEY))}catch(e){return}if(!raw||!navigator.credentials)return;navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),allowCredentials:[{type:'public-key',id:new Uint8Array(raw)}],userVerification:'required',timeout:60000}}).then(openApp).catch(function(){})}
+function showLock(){$('lock').style.display='flex';$('lerr').textContent='';$('lpw').value='';$('lbio').style.display=hasBio()?'block':'none';if(hasBio())tryBio()}
+function needPw(cb){var a=S.acc||{};if(!a.h){cb();return}var p=prompt('اكتب كلمة المرور لتأكيد التعديل');if(p===null)return;hashPw(p,a.s).then(function(h){if(h===a.h)cb();else alert('كلمة المرور غلط')})}
+function renderAcc(){var a=S.acc||{};$('an').value=S.name||'';$('ad').value=S.doc||'';$('aph').value=a.ph||'';$('agm').value=a.gm||'';$('afb').value=a.fb||'';$('bioSt').textContent=hasBio()?'البصمة مفعّلة على الجهاز ده':'البصمة غير مفعّلة على الجهاز ده'}
+$('lgo').onclick=function(){var a=S.acc||{};if(!a.h){openApp();return}hashPw($('lpw').value,a.s).then(function(h){if(h===a.h)openApp();else $('lerr').textContent='كلمة المرور غلط'})};
+$('lpw').addEventListener('keydown',function(e){if(e.key==='Enter')$('lgo').click()});
+$('lbio').onclick=tryBio;
+$('aSave').onclick=function(){needPw(function(){S.name=$('an').value.trim()||S.name;S.doc=$('ad').value.trim()||S.doc;fill();all();alert('تم حفظ الأسماء')})};
+$('pwSave').onclick=function(){var p=$('pw1').value;if(p.length<6){alert('كلمة المرور لازم تكون 6 أحرف على الأقل');return}if(p!==$('pw2').value){alert('الكلمتين مش زي بعض');return}if(!window.crypto||!crypto.subtle){alert('المتصفح مش بيدعم التشفير هنا');return}needPw(function(){var s=hex(crypto.getRandomValues(new Uint8Array(16)));hashPw(p,s).then(function(h){S.acc=S.acc||{};S.acc.s=s;S.acc.h=h;$('pw1').value='';$('pw2').value='';unl=true;all();alert('تم حفظ كلمة المرور')})})};
+$('pwOff').onclick=function(){needPw(function(){if(S.acc){delete S.acc.h;delete S.acc.s}try{localStorage.removeItem(BKEY)}catch(e){}all();renderAcc();alert('تم إلغاء القفل')})};
+$('bioOn').onclick=function(){if(!window.PublicKeyCredential||!navigator.credentials){alert('المتصفح ده مش بيدعم البصمة');return}if(!(S.acc&&S.acc.h)){alert('اعمل كلمة مرور الأول');return}navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:'ETA Pharmacy'},user:{id:crypto.getRandomValues(new Uint8Array(16)),name:'owner',displayName:'owner'},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},timeout:60000}}).then(function(c){try{localStorage.setItem(BKEY,JSON.stringify(Array.from(new Uint8Array(c.rawId))))}catch(e){}renderAcc();alert('تم تفعيل البصمة على الجهاز ده')}).catch(function(){alert('الإعداد اتلغى، أو الجهاز مفيهوش بصمة أو قفل شاشة')})};
+$('bioOff').onclick=function(){try{localStorage.removeItem(BKEY)}catch(e){}renderAcc()};
+$('cSave').onclick=function(){S.acc=S.acc||{};S.acc.ph=$('aph').value.trim();S.acc.gm=$('agm').value.trim();S.acc.fb=$('afb').value.trim();all();alert('تم الحفظ')};
+$('shopName').readOnly=true;$('docName').readOnly=true;
+document.addEventListener('click',function(e){var b=e.target.closest('button');if(b&&b.dataset.t==='acc')renderAcc()});
+renderAcc();
+function kdf(p,s,v){var enc=new TextEncoder();if(v===2)return crypto.subtle.importKey('raw',enc.encode(p),'PBKDF2',false,['deriveBits']).then(function(k){return crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode(s),iterations:150000,hash:'SHA-256'},k,256)}).then(hex);return hashPw(p,s)}
+function vrf(p){var a=S.acc||{};return kdf(p,a.s,a.v).then(function(h){return h===a.h})}
+function lk(){try{return JSON.parse(localStorage.getItem('eta-fail')||'{}')}catch(e){return {}}}
+function lkSet(o){try{localStorage.setItem('eta-fail',JSON.stringify(o))}catch(e){}}
+function lockLeft(){var o=lk();return o.u&&o.u>Date.now()?Math.ceil((o.u-Date.now())/60000):0}
+function fail(){var o=lk();o.n=(o.n||0)+1;if(o.n>=5){o.u=Date.now()+300000;o.n=0}lkSet(o)}
+function askPw(msg){return new Promise(function(res){var ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;display:flex;align-items:center;justify-content:center;padding:16px';ov.innerHTML='<div class="box" style="width:100%;max-width:360px;margin:0;background:var(--bg)"><h2></h2><input type="password" autocomplete="current-password" style="margin-bottom:10px"><div style="display:flex;gap:8px"><button class="btn" style="flex:1">تأكيد</button><button class="btn ghost" style="flex:1">إلغاء</button></div></div>';ov.querySelector('h2').textContent=msg;document.body.appendChild(ov);var i=ov.querySelector('input'),bs=ov.querySelectorAll('button');i.focus();function done(v){ov.remove();res(v)}bs[0].onclick=function(){done(i.value)};bs[1].onclick=function(){done(null)};i.onkeydown=function(e){if(e.key==='Enter')done(i.value)}})}
+function setPw(p){var s=hex(crypto.getRandomValues(new Uint8Array(16)));return kdf(p,s,2).then(function(h){S.acc=S.acc||{};S.acc.s=s;S.acc.h=h;S.acc.v=2;all();renderAcc()})}
+$('lgo').onclick=function(){var a=S.acc||{};if(!a.h){openApp();return}if(lockLeft()){$('lerr').textContent='تم قفل المحاولات. جرّب بعد '+lockLeft()+' دقيقة';return}var p=$('lpw').value;vrf(p).then(function(ok){if(ok){lkSet({});$('lpw').value='';if(a.v!==2)setPw(p).then(openApp);else openApp()}else{fail();$('lerr').textContent=lockLeft()?'كلمة مرور غلط. تم قفل المحاولات 5 دقائق':'كلمة المرور غلط'}})};
+needPw=function(cb){var a=S.acc||{};if(!a.h){cb();return}if(lockLeft()){alert('تم قفل المحاولات. جرّب بعد '+lockLeft()+' دقيقة');return}askPw('اكتب كلمة المرور لتأكيد التعديل').then(function(p){if(p===null)return;vrf(p).then(function(ok){if(ok){lkSet({});cb()}else{fail();alert('كلمة المرور غلط')}})})};
+$('pwSave').onclick=function(){var p=$('pw1').value;if(p.length<8){alert('كلمة المرور لازم تكون 8 أحرف على الأقل');return}if(p!==$('pw2').value){alert('الكلمتين مش زي بعض');return}if(!window.crypto||!crypto.subtle){alert('المتصفح مش بيدعم التشفير هنا. افتح الصفحة من رابط https');return}needPw(function(){setPw(p).then(function(){$('pw1').value='';$('pw2').value='';alert('تم حفظ كلمة المرور')})})};
+var last=Date.now();
+['click','keydown','touchstart'].forEach(function(ev){document.addEventListener(ev,function(){last=Date.now()},true)});
+setInterval(function(){if(S.acc&&S.acc.h&&unl&&Date.now()-last>300000){unl=false;showLock()}},15000);
+['#adm #pin','#adm #bioOn','#adm #acName'].forEach(function(q){var x=document.querySelector(q);if(x&&x.closest('.box'))x.closest('.box').style.display='none'});
+document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.dataset.scan!=='info')return;scan(function(c){var m=S.meds.filter(function(x){return x.bc===c})[0];alert(m?m.n+'\nالسعر: '+m.p+' ج.م\nالمتاح: '+m.q+(m.e?'\nالصلاحية: '+m.e:'')+(m.ind?'\nالاستخدام: '+m.ind:''):'الباركود ده مش مسجل: '+c)})});
+function rank(m,t){var n=norm(m.n),e=norm(m.en||''),s=0,q=t.join(' ');if(m.bc&&norm(m.bc)===q)s+=100;if(n.indexOf(q)===0||e.indexOf(q)===0)s+=50;t.forEach(function(x){if((' '+n).indexOf(' '+x)>-1||(' '+e).indexOf(' '+x)>-1)s+=10;if(n.indexOf(x)>-1)s+=5});return s}
+function scan(cb){
+  if(!window.BarcodeDetector||!navigator.mediaDevices){alert('المتصفح ده مش بيدعم قراءة الباركود بالكاميرا. جرّب Chrome على أندرويد، أو اكتب الرقم يدويا، أو استخدم قارئ باركود.');return}
+  var ov=document.createElement('div');ov.style.cssText='position:fixed;inset:0;background:#000;z-index:99;display:flex;flex-direction:column';
+  ov.innerHTML='<video playsinline muted style="flex:1;width:100%;object-fit:cover"></video><button class="btn" style="margin:12px">إلغاء</button>';
+  document.body.appendChild(ov);
+  var v=ov.querySelector('video'),st,run=true,det=new BarcodeDetector();
+  function stop(){run=false;if(st)st.getTracks().forEach(function(t){t.stop()});ov.remove()}
+  ov.querySelector('button').onclick=stop;
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}}).then(function(s){st=s;v.srcObject=s;v.play();
+    (function loop(){if(!run)return;det.detect(v).then(function(r){if(r.length){var c=String(r[0].rawValue);stop();cb(c)}else setTimeout(loop,250)}).catch(function(){setTimeout(loop,400)})})();
+  }).catch(function(){stop();alert('مقدرتش أفتح الكاميرا. اسمح للمتصفح باستخدامها.')});
+}
+document.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var d=b.dataset;
+  if(d.scan==='q')scan(function(c){var m=S.meds.filter(function(x){return x.bc===c})[0];if(m&&sellable(m)){cart[m.id]=Math.min((cart[m.id]||0)+1,m.q);$('q').value=''}else{$('q').value=c;if(!m)alert('الباركود ده مش مسجل. ابحث بالاسم، وبعدها سجّل له الباركود من المخزون.')}renderSell()});
+  if(d.scan==='sq')scan(function(c){$('sq').value=c;renderInv()});
+  if(d.scan==='fb')scan(function(c){$('fb').value=c});
+  if(d.bcset){var m=S.meds.filter(function(x){return x.id==d.bcset})[0],v=prompt('اكتب رقم الباركود، أو اضغط موافق وهو فاضي لفتح الكاميرا');if(v===null)return;if(v.trim()){m.bc=v.trim();all()}else scan(function(c){m.bc=c;all()})}
+});
+$('q').addEventListener('keydown',function(e){if(e.key!=='Enter')return;var c=this.value.trim(),m=S.meds.filter(function(x){return x.bc&&x.bc===c})[0];if(m&&sellable(m)){cart[m.id]=Math.min((cart[m.id]||0)+1,m.q);this.value='';renderSell()}});
+$('pList').onclick=function(e){var b=e.target.closest('button');if(b&&b.dataset.pdel&&confirm('حذف هذه الجهة؟')){S.ppl=S.ppl.filter(function(x){return x.id!=b.dataset.pdel});all()}};
+var IND=['التهابات بكتيرية','مسكن للألم وخافض للحرارة','مضاد التهاب وآلام المفاصل','حموضة وقرحة المعدة','حساسية وزكام تحسسي','كحة وبلغم','ضغط مرتفع','السكر النوع الثاني','الكوليسترول والدهون','فيتامين ومكمل غذائي','فطريات','التهابات وحساسية الجلد','إسهال ومغص وهضم','إمساك','قلق واضطراب النوم','تقلصات وآلام العضلات','الغدة الدرقية','قصور القلب والذبحة','سيولة الدم','المسالك البولية والبروستاتا','هرمونات وأمراض نسائية','طفيليات ودود','علاج العين','علاج الأذن والأنف','الصداع النصفي','الأعصاب والصرع','الربو وضيق التنفس','الغثيان والقيء','مضاد حيوي موضعي للجلد','تخدير موضعي وعناية بالجروح','تغذية ومكملات الأطفال','الحمل والمكملات','الاكتئاب','النقرس','هشاشة العظام'];
+var C4='أموكسيسيلين شراب|Amoxil Syrup|35|0;أوجمنتين 625 مجم|Augmentin 625|85|0;أوجمنتين شراب|Augmentin Syrup|75|0;سيفوروكسيم 500 مجم|Zinnat|110|0;سيفادروكسيل 500 مجم|Duricef|60|0;سيفكسيم شراب|Suprax Syrup|70|0;أزيثرومايسين 250 مجم|Azithromycin|55|0;زيثروماكس شراب|Zithromax Syrup|65|0;إريثروميسين 500 مجم|Erythrocin|40|0;ليفوفلوكساسين 750 مجم|Tavanic 750|160|0;موكسيفلوكساسين 400 مجم|Avelox|230|0;أوفلوكساسين 200 مجم|Tarivid|70|0;نيتروفيورانتوين 100 مجم|Furadantin|30|19;كوتريموكسازول|Septrin|25|0;كلينداميسين 300 مجم|Dalacin C|90|0;فلاجيل شراب|Flagyl Syrup|28|0;تينيدازول 500 مجم|Fasigyn|45|0;جنتاميسين حقن|Garamycin|20|0;بروفين 600 مجم|Brufen 600|45|2;بروفين شراب|Brufen Syrup|30|1;فولتارين 75 مجم حقن|Voltaren Inj|45|2;فولتارين تحاميل 100 مجم|Voltaren Supp|40|2;كتافلام تحاميل 50 مجم|Cataflam Supp|55|2;أركوكسيا 90 مجم|Arcoxia|130|2;سيليبريكس 200 مجم|Celebrex|140|2;نابروكسين 500 مجم|Naprosyn|50|2;كيتورولاك 10 مجم|Toradol|35|1;باراسيتامول تحاميل|Paracetamol Supp|15|1;بيرفالجان حقن|Perfalgan|35|1;بانادول أطفال شراب|Panadol Baby|35|1;بانادول أدفانس|Panadol Advance|40|1;أدول 500 مجم|Adol|20|1;فيفادول|Fevadol|18|1;بونستان 500 مجم|Ponstan|40|1;إيزومبرازول 20 مجم|Esomeprazole|90|3;لانزوبرازول 30 مجم|Lansoprazole|75|3;بانتولوك 40 مجم|Pantoloc|110|3;باريت 20 مجم|Pariet|140|3;مالوكس شراب|Maalox|45|3;جافيسكون|Gaviscon|65|3;سوكرالفات|Sucralfate|55|3;موتيليوم شراب|Motilium Syrup|38|27;زوفران 4 مجم|Zofran|50|27;بريمبيران|Primperan|20|27;كولوسبازمين|Colospasmin|35|12;دوسباتالين 135 مجم|Duspatalin|75|12;لوبراميد 2 مجم|Lopramide|18|12;إنتيروجرمينا|Enterogermina|90|12;بروبيوتيك قطرة أطفال|Probiotic Drops|85|12;لاكتولوز شراب|Lactulose|55|13;دولكولاكس|Dulcolax|25|13;تحاميل جليسرين|Glycerin Supp|15|13;ميكرولاكس|Microlax|30|13;ديجستين|Digestin|30|12;كريون|Creon|180|12;بنتاسا 500 مجم|Pentasa|220|12;تلفاست 120 مجم|Telfast|75|4;زيرتك شراب|Zyrtec Syrup|40|4;زايزال 5 مجم|Xyzal|60|4;فينيستيل قطرة|Fenistil|35|4;فينيستيل جل|Fenistil Gel|45|11;سينجولير 10 مجم|Singulair|130|26;سينجولير 4 مجم|Singulair 4|110|26;سيريتايد بخاخ|Seretide|240|26;سيمبيكورت|Symbicort|290|26;بولميكورت بخاخ|Pulmicort|160|26;فليكسونيز بخاخ أنف|Flixonase|120|4;ناسونكس بخاخ أنف|Nasonex|135|4;أتروفنت بخاخ|Atrovent|70|26;ثيوفيلين|Theophylline|25|26;ميوكوسولفان 30 مجم|Mucosolvan|40|5;إيه سي سي|ACC|45|5;بيسولفون شراب|Bisolvon|30|5;توسيليت شراب|Tussilet|28|5;فيكس بخاخ|Vicks Spray|35|5;فيكس فابورب|Vicks VapoRub|30|5;أتريفين أطفال|Otrivin Baby|35|23;كونكور 10 مجم|Concor 10|85|6;تينورمين 50 مجم|Tenormin|30|6;ديلاترند 6.25 مجم|Dilatrend|60|6;بيتالوك 50 مجم|Betaloc|40|6;أملور 10 مجم|Amlor 10|85|6;أدالات 20 مجم|Adalat|35|6;ديوفان 80 مجم|Diovan|150|6;ميكارديس 40 مجم|Micardis|130|6;أبروفيل 150 مجم|Aprovel|140|6;كوزار بلس|Cozaar Plus|110|6;تريتاس 5 مجم|Tritace|90|6;رينيتك 10 مجم|Renitec|50|6;زيستريل 10 مجم|Zestril|65|6;هيدروكلوروثيازيد|HCTZ|20|6;ألدكتون 25 مجم|Aldactone|45|17;لازيكس حقن|Lasix Inj|25|17;إيزوكيت 20 مجم|Isoket|35|17;فاستاريل 35 مجم|Vastarel|120|17;بروكورالان 5 مجم|Procoralan|260|17;كوردارون 200 مجم|Cordarone|85|17;ماريفان 5 مجم|Marevan|25|18;زاريلتو 20 مجم|Xarelto|650|18;أسبرين 75 مجم|Aspirin 75|15|18;كليكسان حقن|Clexane|220|18;كريستور 20 مجم|Crestor 20|240|8;ليبيتور 40 مجم|Lipitor 40|220|8;زوكور 20 مجم|Zocor|90|8;ليبانتيل 160 مجم|Lipanthyl|130|8;إيزتول 10 مجم|Ezetrol|180|8;جلوكوفاج 850 مجم|Glucophage 850|55|7;أماريل 2 مجم|Amaryl|60|7;أماريل 4 مجم|Amaryl 4|85|7;جارديانس 10 مجم|Jardiance|450|7;فورسيجا 10 مجم|Forxiga|430|7;جانوميت|Janumet|440|7;جالفوس 50 مجم|Galvus|350|7;أكتوس 30 مجم|Actos|90|7;لانتوس إنسولين|Lantus|520|7;ميكستارد إنسولين|Mixtard|160|7;نيو-ميركازول 5 مجم|Neo-Mercazole|30|16;إلتروكسين 50 مجم|Eltroxin 50|35|16;دوفاستون|Duphaston|180|20;يوتروجيستان 200 مجم|Utrogestan|220|20;مارفيلون|Marvelon|60|20;ياسمين|Yasmin|130|20;ديان 35|Diane 35|85|20;كلوميد 50 مجم|Clomid|60|20;فلاجيل مهبلي|Flagyl Vaginal|35|20;كانستين مهبلي|Canesten Vaginal|45|10;لوسترال 50 مجم|Lustral|110|32;سيبرالكس 10 مجم|Cipralex|140|32;بروزاك 20 مجم|Prozac|70|32;تريبتيزول 25 مجم|Tryptizol|25|32;بوسبار|Buspar|60|14;ميلاتونين 5 مجم|Melatonin 5|110|14;ديباكين 500 مجم|Depakine|90|25;تجريتول 200 مجم|Tegretol|45|25;لاميكتال 100 مجم|Lamictal|110|25;كيبرا 500 مجم|Keppra|160|25;نيورونتين 300 مجم|Neurontin|120|25;ليريكا 75 مجم|Lyrica|180|25;إيميجران 50 مجم|Imigran|130|24;سيبيليوم 5 مجم|Sibelium|50|24;بيتاسيرك 16 مجم|Betaserc|95|25;ستوجيرون|Stugeron|35|25;ميثيكوبال|Methycobal|140|25;نيوروروبين|Neurorubin|80|25;أريسبت 10 مجم|Aricept|220|25;مادوبار|Madopar|90|25;ماجنيه ب6|Magne B6|85|15;موسكوريل 4 مجم|Muscoril|75|15;سيردالود 2 مجم|Sirdalud|60|15;باراكلورزوكسازون|Parafon|40|15;نورجيسيك|Norgesic|45|15;ليوريسال 10 مجم|Lioresal|35|15;ميوفلكس|Myoflex|45|15;أومنيك 0.4 مجم|Omnic|110|19;بروسكار 5 مجم|Proscar|90|19;يوريسباز 200 مجم|Urispas|60|19;سيستون أقراص|Cystone|70|19;مونورول|Monurol|85|19;بيتميجا 50 مجم|Betmiga|280|19;ديتروبان 5 مجم|Ditropan|40|19;كانيفرون|Canephron|120|19;لاميزيل 250 مجم|Lamisil|130|10;لاميزيل كريم|Lamisil Cream|65|10;كلوتريمازول كريم|Clotrimazole|30|10;داكتارين جل فموي|Daktarin|55|10;سبورانوكس|Sporanox|140|10;نيستاتين شراب|Nystatin|25|10;ديفلوكان 50 مجم|Diflucan 50|45|10;بيتنوفات كريم|Betnovate|35|11;جنتاكورتين|Gentacortin|40|11;إيلوكون كريم|Elocon|60|11;ديرموفيت|Dermovate|45|11;بروتوبيك 0.1%|Protopic|230|11;فيوسيدين إتش|Fucidin H|60|28;باكتروبان مرهم|Bactroban|85|28;جنتاميسين مرهم|Gentamicin Oint|20|28;فلامازين|Flamazine|55|28;إيكونازول كريم|Econazole|35|10;زيلوكايين جل|Xylocaine Gel|30|29;زنك أكسيد كريم|Zinc Oxide|20|11;يوريا كريم 10%|Urea 10%|55|11;سيكاترين|Cicatrin|50|28;ديرمازين|Dermazin|60|28;ميدرياسيل قطرة عين|Mydriacyl|40|22;كلورامفينيكول عين|Chloramphenicol Eye|20|22;توبراديكس عين|Tobradex|65|22;تيمولول قطرة|Timolol|45|22;زالاتان قطرة|Xalatan|180|22;أرتيلاك دموع صناعية|Artelac|90|22;سيلوكسان قطرة عين|Ciloxan|45|22;أوتيكس قطرة أذن|Otix|55|23;كانديبين قطرة أذن|Candibene|40|23;ديكونجستال قطرة أنف|Decongestal|30|23;فيتامين أ|Vitamin A|35|9;فيتامين إي 400|Vitamin E|50|9;فيتامين ب كومبلكس|B Complex|40|9;فيتامين سي أطفال|Vit C Kids|35|9;ملتي فيتامين أطفال|Multivitamin Kids|75|30;حديد شراب|Iron Syrup|45|30;كالسيوم شراب أطفال|Calcium Syrup|40|30;فيتامين د قطرة أطفال|Vit D Drops|35|30;بريجنانكير|Pregnacare|280|31;إلفيت|Elevit|250|31;حمض فوليك وحديد|Folic Iron|40|31;فوساماكس 70 مجم|Fosamax|130|34;فيتامين د3 1000|Vit D3 1000|45|34;أوميجا 3 أطفال|Omega Kids|110|30;كوانزيم كيو 10|CoQ10|180|9;سيلينيوم|Selenium|90|9;فيتامين ب6|Vitamin B6|30|9;زيلوريك 300 مجم|Zyloric|35|33;كولشيسين 0.5 مجم|Colchicine|25|33;يولوريك 80 مجم|Uloric|200|33;زنتل 400 مجم|Zentel|45|21;فيرموكس|Vermox|40|21;أنتينال أطفال|Antinal Kids|30|21;أيفرمكتين|Ivermectin|35|21'.split(';');
+function merge4(){var idx={};S.meds.forEach(function(m){idx[norm(m.n)]=m});var n=0;C4.forEach(function(s,i){var a=s.split('|');if(idx[norm(a[0])])return;var x=new Date();x.setDate(x.getDate()+220+(i*9)%500);S.meds.push({id:Date.now()+3000+i,n:a[0],en:a[1],p:+a[2],q:8+(i*7)%35,e:x.toISOString().slice(0,10),ind:IND[a[3]],cat:'أدوية'});n++});return n}
+if(S.v!==4){merge4();S.v=4}
+function push(){if(!DB)return;clearTimeout(tm);tm=setTimeout(function(){DB.set({json:JSON.stringify(S),t:Date.now()}).catch(function(){})},600)}
+function fill(){$('shopName').value=S.name||'';$('docName').value=S.doc||'';$('acName').value=S.name||'';$('acDoc').value=S.doc||''}
+$('bulk').onclick=function(){var n=merge()+merge3()+merge4();all();alert('تمت إضافة '+n+' صنف')};
+['input','keyup','search','change'].forEach(function(e){$('q').addEventListener(e,renderSell);$('sq').addEventListener(e,renderInv)});
+$('q').oninput=renderSell;$('sq').oninput=renderInv;$('shopName').value=S.name;$('docName').value=S.doc;$('shopName').onchange=save;$('docName').onchange=save;
+all();
+if(S.acc&&S.acc.h)showLock();
+if(window.claude&&window.claude.use){window.claude.use('db').then(function(db){if(!db)return;DB=db.doc('pharmacy/main');DB.onSnapshot(function(s){var d=s.exists&&s.data();if(!d&&s.metadata&&s.metadata.fromCache)return;$('sync').textContent='متزامن بين الأجهزة';if(!d||!d.json){push();return}if(s.metadata&&s.metadata.hasPendingWrites)return;try{var r=JSON.parse(d.json);if(r&&r.meds){S=r;fill();if(S.acc&&S.acc.h&&!unl)showLock();renderSell();renderInv();renderSum();renderAdm();renderPpl();try{localStorage.setItem(K,d.json)}catch(e){}}}catch(e){}},function(){})}).catch(function(){})}
+})();
+</script>
+</body>
+</html>
